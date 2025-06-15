@@ -142,3 +142,6 @@ checkpoints/
 wandb/
 temp_results/
 output/*.*
+
+vggface2_crop_arcfacealign_224/
+simswap/
