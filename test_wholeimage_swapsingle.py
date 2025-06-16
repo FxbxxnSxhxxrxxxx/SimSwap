@@ -4,7 +4,7 @@ Github: https://github.com/NNNNAI
 Date: 2021-11-23 17:03:58
 LastEditors: Naiyuan liu
 LastEditTime: 2021-11-24 19:19:43
-Description: 
+Description:
 '''
 
 import cv2
@@ -22,6 +22,8 @@ import os
 from util.add_watermark import watermark_image
 from util.norm import SpecificNorm
 from parsing_model.model import BiSeNet
+
+script_dir = os.path.dirname(os.path.abspath(__file__))
 
 def lcm(a, b): return abs(a * b) / fractions.gcd(a, b) if a and b else 0
 
@@ -47,12 +49,12 @@ if __name__ == '__main__':
         mode = 'ffhq'
     else:
         mode = 'None'
-    logoclass = watermark_image('./simswaplogo/simswaplogo.png')
+    logoclass = watermark_image(os.path.join(script_dir, 'simswaplogo', 'simswaplogo.png'))
     model = create_model(opt)
     model.eval()
 
     spNorm =SpecificNorm()
-    app = Face_detect_crop(name='antelope', root='./insightface_func/models')
+    app = Face_detect_crop(name='antelope', root=os.path.join(script_dir, 'insightface_func', 'models'))
     app.prepare(ctx_id= 0, det_thresh=0.6, det_size=(640,640),mode=mode)
 
     with torch.no_grad():
@@ -60,7 +62,7 @@ if __name__ == '__main__':
 
         img_a_whole = cv2.imread(pic_a)
         img_a_align_crop, _ = app.get(img_a_whole,crop_size)
-        img_a_align_crop_pil = Image.fromarray(cv2.cvtColor(img_a_align_crop[0],cv2.COLOR_BGR2RGB)) 
+        img_a_align_crop_pil = Image.fromarray(cv2.cvtColor(img_a_align_crop[0],cv2.COLOR_BGR2RGB))
         img_a = transformer_Arcface(img_a_align_crop_pil)
         img_id = img_a.view(-1, img_a.shape[0], img_a.shape[1], img_a.shape[2])
 
@@ -96,14 +98,14 @@ if __name__ == '__main__':
             n_classes = 19
             net = BiSeNet(n_classes=n_classes)
             net.cuda()
-            save_pth = os.path.join('./parsing_model/checkpoint', '79999_iter.pth')
+            save_pth = os.path.join(script_dir, 'parsing_model', 'checkpoint', '79999_iter.pth')
             net.load_state_dict(torch.load(save_pth))
             net.eval()
         else:
             net =None
 
         reverse2wholeimage(b_align_crop_tenor_list, swap_result_list, b_mat_list, crop_size, img_b_whole, logoclass, \
-            os.path.join(opt.output_path, 'result_whole_swapsingle.jpg'), opt.no_simswaplogo,pasring_model =net,use_mask=opt.use_mask, norm = spNorm)
+            os.path.join(opt.output_path, f'{os.getcwd()}/output/result_whole_swapsingle.jpg'), opt.no_simswaplogo,pasring_model =net,use_mask=opt.use_mask, norm = spNorm)
 
         print(' ')
 

@@ -14,8 +14,9 @@ import shutil
 import numpy as np
 from tqdm import tqdm
 from util.reverse2original import reverse2wholeimage
-import moviepy.editor as mp
-from moviepy.editor import AudioFileClip, VideoFileClip 
+from moviepy.audio.io.AudioFileClip import AudioFileClip
+from moviepy.video.io.VideoFileClip import VideoFileClip
+from moviepy.video.io.ImageSequenceClip import ImageSequenceClip
 from moviepy.video.io.ImageSequenceClip import ImageSequenceClip
 import  time
 from util.add_watermark import watermark_image
@@ -115,7 +116,7 @@ def video_swap(video_path, id_vetor, swap_model, detect_model, save_path, temp_r
     clips = ImageSequenceClip(image_filenames,fps = fps)
 
     if not no_audio:
-        clips = clips.set_audio(video_audio_clip)
+        clips = clips.with_audio(video_audio_clip)
 
 
     clips.write_videofile(save_path,audio_codec='aac')
