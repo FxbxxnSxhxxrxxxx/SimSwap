@@ -42,7 +42,7 @@ class TrainOptions:
         self.parser.add_argument('--isTrain', type=str2bool, default='True')
 
         # input/output sizes       
-        self.parser.add_argument('--batchSize', type=int, default=4, help='input batch size')       
+        self.parser.add_argument('--batchSize', type=int, default=4, help='input batch size')   
 
         # for displays
         self.parser.add_argument('--use_tensorboard', type=str2bool, default='False')
